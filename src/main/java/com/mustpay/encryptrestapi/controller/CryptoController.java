@@ -5,9 +5,10 @@ import com.mustpay.encryptrestapi.dto.request.DecryptRequest;
 import com.mustpay.encryptrestapi.dto.request.EncryptRequest;
 import com.mustpay.encryptrestapi.dto.response.DecryptResponse;
 import com.mustpay.encryptrestapi.dto.response.EncryptResponse;
+import com.mustpay.encryptrestapi.dto.response.ResponseInformation;
 import com.mustpay.encryptrestapi.service.CryptoService;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,12 @@ public class CryptoController {
     public ResponseEntity<EncryptResponse> encrypt(@RequestBody EncryptRequest request) {
         logger.info("Encrypt request: " + request.toString());
         EncryptResponse response = cryptoService.encrypt(request);
+        response.setResponseInformation(
+                new ResponseInformation(
+                        HttpStatus.OK.value(),
+                        Constants.SUCCESSFULLY_ENCRYPTED
+                )
+        );
         logger.info("Encrypt response: " + response.toString());
         return ResponseEntity.ok(response);
     }
@@ -39,6 +46,12 @@ public class CryptoController {
     public ResponseEntity<DecryptResponse> decrypt(@RequestBody DecryptRequest request) {
         logger.info("Decrypt request: " + request.toString());
         DecryptResponse response = cryptoService.decrypt(request);
+        response.setResponseInformation(
+                new ResponseInformation(
+                        HttpStatus.OK.value(),
+                        Constants.SUCCESSFULLY_DECRYPTED
+                )
+        );
         logger.info("Decrypt response: " + response.toString());
         return ResponseEntity.ok(response);
     }
